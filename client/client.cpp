@@ -11,10 +11,12 @@ Widget::Widget(QWidget *parent)
     ui->setupUi(this);
     ui->hostLineEdit->setPlaceholderText(tr("Пример ввода:127.0.0.1"));
     ui->portLineEdit->setPlaceholderText(tr("Пример ввода:6666"));
-    QString ipItem = "(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])";
+    QString ipItem = "(0|[1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])";
     QRegExp RegExp ("^" + ipItem + "\\." + ipItem + "\\." + ipItem + "\\." + ipItem + "$");
     ui->hostLineEdit->setValidator(new QRegExpValidator(RegExp));
-    ui->portLineEdit->setValidator(new QRegExpValidator(QRegExp("0|[1-9]\\d{0,4}"),this));
+    QString ipItem2 = "(0|6[0-4][0-9][0-9][0-9]|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-5]|[1-5][0-9][0-9][0-9][0-9]|[7-9][0-9][0-9][0-9]|6[0-9][0-9][0-9])";
+    QRegExp RegExp2 ("^" + ipItem2 + "$");
+    ui->portLineEdit->setValidator(new QRegExpValidator(RegExp2));
     all_bytes = 0;
     is_ok = false;
 
@@ -142,7 +144,14 @@ void Widget::on_sendButton_clicked()
 
 void Widget::on_connectButton_clicked()
 {
-    if(ui->hostLineEdit->text().size()<7)
+    QString hostLineEdit_text = ui->hostLineEdit->text();
+    bool end_of_hostLineEdit_text=false;
+    for(int i=0;i<hostLineEdit_text.size();i++)
+    {
+        if(hostLineEdit_text[hostLineEdit_text.size()-1]==".")
+            end_of_hostLineEdit_text=true;
+    }
+    if(ui->hostLineEdit->text().size()<7 || end_of_hostLineEdit_text==true)
     {
         QMessageBox::warning(this, "Внимание","Неверный формат ip,введите все числа");
     }

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>821</width>
     <height>444</height>
    </rect>
   </property>
@@ -16,10 +16,10 @@
   <widget class="QLabel" name="serverStatusLabel">
    <property name="geometry">
     <rect>
-     <x>55</x>
-     <y>400</y>
+     <x>0</x>
+     <y>390</y>
      <width>301</width>
-     <height>16</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
@@ -48,23 +48,12 @@
      <height>26</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Порт</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="portLineEdit"/>
-    </item>
-   </layout>
+   <layout class="QHBoxLayout" name="horizontalLayout"/>
   </widget>
   <widget class="QPushButton" name="startButton">
    <property name="geometry">
     <rect>
-     <x>670</x>
+     <x>710</x>
      <y>390</y>
      <width>101</width>
      <height>31</height>
@@ -72,6 +61,55 @@
    </property>
    <property name="text">
     <string>Старт</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="layoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>390</y>
+     <width>172</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Ip</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="hostLineEdit">
+      <property name="placeholderText">
+       <string>127.0.0.1</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QLineEdit" name="portLineEdit">
+   <property name="geometry">
+    <rect>
+     <x>535</x>
+     <y>392</y>
+     <width>149</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>501</x>
+     <y>391</y>
+     <width>28</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Порт</string>
    </property>
   </widget>
  </widget>

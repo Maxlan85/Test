@@ -28,6 +28,7 @@ private:
     qint64 image_size;//Проверка на получение изображения
     QString image;
     bool is_ok;//Проверка соединения с клиентом
+    bool wrong_adress;
 
 private slots:
     void start();

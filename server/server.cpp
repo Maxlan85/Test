@@ -9,8 +9,12 @@ Widget::Widget(QWidget *parent)
 {
     ui->setupUi(this);
     ui->portLineEdit->setPlaceholderText(tr("Пример ввода:6666"));
-    ui->portLineEdit->setValidator(new QIntValidator);
-    ui->portLineEdit->setValidator(new QRegExpValidator(QRegExp("0|[1-9]\\d{0,4}"),this));
+    QString ipItem = "(0|[1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])";
+    QRegExp RegExp ("^" + ipItem + "\\." + ipItem + "\\." + ipItem + "\\." + ipItem + "$");
+    ui->hostLineEdit->setValidator(new QRegExpValidator(RegExp));
+    QString ipItem2 = "(0|6[0-4][0-9][0-9][0-9]|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-5]|[1-5][0-9][0-9][0-9][0-9]|[7-9][0-9][0-9][0-9]|6[0-9][0-9][0-9])";
+    QRegExp RegExp2 ("^" + ipItem2 + "$");
+    ui->portLineEdit->setValidator(new QRegExpValidator(RegExp2));
     is_ok=false;
     connect(&tcp_server, SIGNAL(newConnection()),this, SLOT(accept_connection()));
     ui->imageLabel->show();
@@ -23,17 +27,22 @@ Widget::~Widget()
 
 void Widget::start()
 {
-   if (!tcp_server.listen(QHostAddress::LocalHost, ui->portLineEdit->text().toInt()))
+   if (!tcp_server.listen(QHostAddress(ui->hostLineEdit->text()), ui->portLineEdit->text().toInt()))
    {
         qDebug() << tcp_server.errorString();
-        close();
+        QMessageBox::warning(this, "Внимание","Адрес или порт недоступны");
+        wrong_adress=true;
         return;
     }
+   else
+   {
+    wrong_adress=false;
     all_bytes = 0;
     bytes_received = 0;
     image_size = 0;
     ui->serverStatusLabel->setText(tr("Ожидание клиента"));
     ui->portLineEdit->setEnabled(true);
+   }
 }
 
 void Widget::accept_connection()
@@ -121,9 +130,20 @@ QImage Widget::get_image(const QString &data)
 
 void Widget::on_startButton_clicked()
 {
-    if(ui->portLineEdit->text()=="")
+    QString hostLineEdit_text = ui->hostLineEdit->text();
+    bool end_of_hostLineEdit_text=false;
+    for(int i=0;i<hostLineEdit_text.size();i++)
     {
-        QMessageBox::warning(this, "Внимание","Поле порта пустое");
+        if(hostLineEdit_text[hostLineEdit_text.size()-1]==".")
+            end_of_hostLineEdit_text=true;
+    }
+    if(ui->hostLineEdit->text().size()<7 || end_of_hostLineEdit_text==true)
+    {
+        QMessageBox::warning(this, "Внимание","Неверный формат ip,введите все числа");
+    }
+    else if(ui->hostLineEdit->text()==""||ui->portLineEdit->text()=="")
+    {
+        QMessageBox::warning(this, "Внимание","Строка ip или порта не заполнена");
     }
     else
     {
@@ -131,12 +151,15 @@ void Widget::on_startButton_clicked()
     {
 
         start();
+        if(wrong_adress==false)
+        {
         ui->portLineEdit->setEnabled(false);
         if(is_ok==false)
         ui->startButton->setText(tr("Запустите клиент"));
         else
         {
             ui->startButton->setText(tr("Стоп"));
+        }
         }
     }
     else if(ui->startButton->text() == tr("Запустите клиент"))
